@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block title %}Monitor · ElderCare Guardian{% endblock %}
+
+{% block content %}
+<!--
+  The status panel is the heart of the page. Its colour and the beating
+  pulse reflect the person's real state: calm green when all is well,
+  amber for caution, red for an emergency. JS in dashboard.js drives it.
+-->
+<section id="status-panel" class="status-panel state-unknown" aria-live="polite">
+  <div class="status-left">
+    <p class="status-eyebrow">Current status</p>
+    <h1 id="status-headline" class="status-headline">Connecting…</h1>
+    <p id="status-detail" class="status-detail">Waiting for the first reading from the wearable.</p>
+    <p class="status-meta">
+      <span id="patient-name">{{ patient.name if patient else 'No patient' }}</span>
+      <span class="dot-sep">·</span>
+      updated <span id="last-seen">—</span>
+    </p>
+  </div>
+
+  <div class="status-right">
+    <div class="pulse" id="pulse" aria-hidden="true">
+      <svg viewBox="0 0 32 32" width="34" height="34">
+        <path d="M16 28S4 20.5 4 12.5A6.5 6.5 0 0 1 16 9a6.5 6.5 0 0 1 12 3.5C28 20.5 16 28 16 28Z"/>
+      </svg>
+    </div>
+    <div class="bpm">
+      <span id="bpm-value" class="bpm-value">––</span>
+      <span class="bpm-unit">bpm</span>
+    </div>
+  </div>
+</section>
+
+<!-- Glanceable stats -->
+<section class="stat-row">
+  <div class="stat-card">
+    <p class="stat-label">Resting (24h)</p>
+    <p class="stat-value"><span id="stat-resting">—</span><span class="stat-suffix">bpm</span></p>
+  </div>
+  <div class="stat-card">
+    <p class="stat-label">Range today</p>
+    <p class="stat-value"><span id="stat-range">—</span></p>
+  </div>
+  <div class="stat-card">
+    <p class="stat-label">Wellness</p>
+    <p class="stat-value"><span id="stat-wellness">—</span><span class="stat-suffix">/100</span></p>
+  </div>
+  <div class="stat-card">
+    <p class="stat-label">Movement</p>
+    <p class="stat-value stat-value--text"><span id="stat-motion">—</span></p>
+  </div>
+</section>
+
+<!-- Trend -->
+<section class="panel">
+  <div class="panel-head">
+    <h2>Heart-rate trend</h2>
+    <div class="range-toggle" role="group" aria-label="Time range">
+      <button class="range-btn is-active" data-hours="6">6h</button>
+      <button class="range-btn" data-hours="24">24h</button>
+      <button class="range-btn" data-hours="168">7d</button>
+    </div>
+  </div>
+  <div class="chart-wrap">
+    <canvas id="hrChart"></canvas>
+  </div>
+</section>
+
+<!-- Alerts -->
+<section class="panel">
+  <div class="panel-head">
+    <h2>Alert log</h2>
+    <span id="alert-count" class="badge-soft">0 active</span>
+  </div>
+  <div id="alert-list" class="alert-list">
+    <p class="empty-note">No alerts recorded yet.</p>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}

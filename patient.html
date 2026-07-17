@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}Patient · ElderCare Guardian{% endblock %}
+
+{% block content %}
+<section class="panel panel--form">
+  <div class="panel-head">
+    <h2>Patient &amp; caregiver details</h2>
+  </div>
+  <p class="form-intro">
+    These details are attached to every alert so responders know who they're
+    helping and who to contact.
+  </p>
+
+  <form id="patient-form" class="patient-form">
+    <div class="field-grid">
+      <label>Device ID
+        <input name="device_id" value="{{ patient.device_id if patient }}" required>
+      </label>
+      <label>Full name
+        <input name="name" value="{{ patient.name if patient }}" required>
+      </label>
+      <label>Age
+        <input name="age" type="number" min="0" max="120" value="{{ patient.age if patient and patient.age is not none }}">
+      </label>
+      <label>Address
+        <input name="address" value="{{ patient.address if patient }}">
+      </label>
+      <label class="span-2">Medical conditions
+        <input name="conditions" value="{{ patient.conditions if patient }}">
+      </label>
+      <label>Caregiver name
+        <input name="contact_name" value="{{ patient.contact_name if patient }}">
+      </label>
+      <label>Caregiver phone
+        <input name="contact_phone" value="{{ patient.contact_phone if patient }}">
+      </label>
+      <label class="span-2">Caregiver email (for alerts)
+        <input name="contact_email" type="email" value="{{ patient.contact_email if patient }}">
+      </label>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn-primary">Save details</button>
+      <span id="save-status" class="save-status"></span>
+    </div>
+  </form>
+</section>
+
+<script>
+  document.getElementById('patient-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(e.target).entries());
+    const statusEl = document.getElementById('save-status');
+    try {
+      const res = await fetch('/api/patient', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      statusEl.textContent = res.ok ? 'Saved.' : 'Could not save.';
+      statusEl.className = 'save-status ' + (res.ok ? 'ok' : 'err');
+    } catch (err) {
+      statusEl.textContent = 'Could not save.';
+      statusEl.className = 'save-status err';
+    }
+    setTimeout(() => { statusEl.textContent = ''; }, 3000);
+  });
+</script>
+{% endblock %}

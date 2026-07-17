@@ -1,0 +1,13 @@
+# ElderCare Guardian — Python dependencies (server + simulator)
+# Install with:  pip install -r requirements.txt
+#
+# Tested against the versions below; the >= pins keep it flexible while
+# avoiding known-too-old releases.
+
+Flask>=3.0,<4.0
+pandas>=2.1
+requests>=2.31
+
+# Optional future enhancement (ML-based anomaly detection — see README).
+# Uncomment to experiment; not required to run the app.
+# scikit-learn>=1.3
