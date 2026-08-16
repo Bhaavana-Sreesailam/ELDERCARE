@@ -153,8 +153,11 @@ def api_update_patient():
     return jsonify({"status": "saved"})
 
 
+# Initialize the database at import time so it works both with
+# `python app.py` locally AND when gunicorn imports this module in production.
+db.init_db()
+
 if __name__ == "__main__":
-    db.init_db()
     print("ElderCare Guardian running at http://localhost:5000")
     print(f"Email alerts: {'ENABLED' if config.EMAIL_ENABLED else 'disabled (dashboard-only)'}")
     app.run(host="0.0.0.0", port=5000, debug=True)
