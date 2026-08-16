@@ -30,7 +30,8 @@ import requests
 import config
 import database as db
 
-SERVER = "http://localhost:5000/api/sensor-data"
+import os
+SERVER = os.environ.get("ELDERCARE_SERVER", "http://localhost:5000/api/sensor-data")
 DEVICE_ID = config.DEFAULT_PATIENT["device_id"]
 
 
