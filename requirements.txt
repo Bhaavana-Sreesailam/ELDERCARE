@@ -3,7 +3,7 @@
 #
 # Tested against the versions below; the >= pins keep it flexible while
 # avoiding known-too-old releases.
-
+gunicorn>=21.2
 Flask>=3.0,<4.0
 pandas>=2.1
 requests>=2.31
